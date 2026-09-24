@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#060608">
+<meta name="color-scheme" content="dark">
+<meta name="description" content="Un ritual nocturno para dejar de darle vueltas a todo y dormir.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Dormir">
+<title>Dormir Sin Darle Vueltas a Todo</title>
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div id="stage" aria-hidden="true">
+  <div class="bg" id="bgA"><div class="fallback"></div><div class="lqip"></div><picture><img alt=""></picture></div>
+  <div class="bg" id="bgB"><div class="fallback"></div><div class="lqip"></div><picture><img alt=""></picture></div>
+  <div id="fireglow"></div>
+  <canvas id="rain"></canvas>
+  <div id="flash"></div>
+  <div id="lamp"></div>
+  <div id="veil"></div>
+  <div id="shade"></div>
+  <div id="ambient"></div>
+  <div class="vignette"></div>
+  <div class="grain"></div>
+</div>
+
+<!-- ========== HOME ========== -->
+<section class="screen" id="home" aria-label="Inicio">
+  <div class="topbar">
+    <span class="clock" id="homeClock">—</span>
+    <button class="iconbtn" id="nameBtn" aria-label="Tu nombre"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="12" cy="8.5" r="3.6"/><path d="M4.8 20c1.2-3.6 4-5.4 7.2-5.4s6 1.8 7.2 5.4"/></svg></button>
+  </div>
+  <div class="content col">
+    <p class="eyebrow">Dormir sin darle vueltas a todo</p>
+    <h1 id="greeting">Buenas noches.</h1>
+    <p class="lede">Tu mente ya trabajó suficiente por hoy.</p>
+    <div class="namefield" id="nameField">
+      <input id="nameInput" type="text" placeholder="¿Cómo te llamas?" maxlength="24" autocomplete="given-name" enterkeyhint="done">
+    </div>
+    <button class="notice" id="morningPrompt" data-go="registro" hidden><span class="dot"></span><span>¿Cómo dormiste anoche?</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6.5 18.5 12 13 17.5"/></svg></button>
+    <button class="notice" id="pendingNote" data-go="progreso" hidden><span class="dot"></span><span id="pendingTxt"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6.5 18.5 12 13 17.5"/></svg></button>
+    <div class="actions">
+      <button class="primary" id="startBtn"><span id="startTxt">Comenzar mi ritual</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6.5 18.5 12 13 17.5"/></svg></button>
+      <div class="secondary">
+        <button class="textlink" id="restartBtn" hidden>Empezar de nuevo</button>
+        <button class="textlink" data-go="sonidos" data-solo="1">Solo escuchar un ambiente</button>
+        <button class="textlink" data-go="progreso" id="progLink" hidden>Mi progreso</button>
+        <button class="textlink" data-go="descanso" id="restLink">Ir a descanso</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== CHECK-IN ========== -->
+<section class="screen" id="checkin" aria-label="Cómo llegas">
+  <div class="topbar"><div class="step"><button class="iconbtn" data-back aria-label="Volver"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H6M11 6.5 5.5 12 11 17.5"/></svg></button><span class="ticks"></span></div><span>Llegar</span></div>
+  <div class="content col">
+    <h2>¿Cómo llegas esta noche?</h2>
+    <ul class="feelings" id="feelings">
+      <li><button data-f="acelerada">Con la mente acelerada</button></li>
+      <li><button data-f="preocupada">Con algo que me preocupa</button></li>
+      <li><button data-f="cansada">Cansancio, pero sin poder parar</button></li>
+      <li><button data-f="triste">Con algo de tristeza</button></li>
+      <li><button data-f="tranquila">Bastante en calma</button></li>
+      <li><button data-f="nose">No sé bien cómo llego</button></li>
+    </ul>
+    <div class="noise">
+      <div class="label"><span>Ruido mental</span><span id="noiseLbl">—</span></div>
+      <div class="dots" id="noiseDots">
+        <button data-n="1" aria-label="Muy poco"><span></span></button><button data-n="2" aria-label="Poco"><span></span></button><button data-n="3" aria-label="Algo"><span></span></button><button data-n="4" aria-label="Bastante"><span></span></button><button data-n="5" aria-label="Mucho"><span></span></button>
+      </div>
+    </div>
+    <p class="response" id="checkResp"></p>
+  </div>
+  <div class="foot"><span></span><button class="primary" id="checkNext" data-go="descarga" disabled>Seguir</button></div>
+</section>
+
+<!-- ========== DESCARGA ========== -->
+<section class="screen" id="descarga" aria-label="Descarga mental">
+  <div class="topbar"><div class="step"><button class="iconbtn" data-back aria-label="Volver"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H6M11 6.5 5.5 12 11 17.5"/></svg></button><span class="ticks"></span></div><span>Descargar</span></div>
+  <div class="content col">
+    <h2>Deja aquí lo que sigue dando vueltas.</h2>
+    <p class="lede" style="font-size:clamp(17px,4.4vw,20px)">No tiene que estar ordenado. Nadie más lo va a leer.</p>
+    <div class="sheet" id="sheet">
+      <div class="date"><span id="sheetDate"></span><span id="sheetCount"></span></div>
+      <textarea id="thought" placeholder="Lo que tengo pendiente, lo que no dije, lo que me preocupa de mañana…" aria-label="Escribe lo que te preocupa"></textarea>
+      <div class="ghost" id="ghost"></div>
+    </div>
+    <div class="kept" id="kept"><span class="seal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5 10 17 19 7.5"/></svg></span><span id="keptTxt">Guardado para mañana.</span></div>
+    <div class="dlactions">
+      <button class="quiet" id="releaseBtn" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z"/></svg>Lo atenderé mañana</button>
+    </div>
+    <p class="privacy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="5" y="10.5" width="14" height="9.5" rx="2"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></svg>Se guarda solo en este dispositivo. Nadie más puede leerlo.</p>
+  </div>
+  <div class="foot"><button class="textlink" id="dlSkip" data-go="ritual">Omitir</button><button class="primary" id="dlNext" data-go="ritual">Seguir</button></div>
+</section>
+
+<!-- ========== RITUAL PERSONALIZADO ========== -->
+<section class="screen" id="ritual" aria-label="Tu ritual de esta noche">
+  <div class="topbar"><div class="step"><button class="iconbtn" data-back aria-label="Volver"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H6M11 6.5 5.5 12 11 17.5"/></svg></button><span class="ticks"></span></div><span>Tu ritual</span></div>
+  <div class="content col">
+    <p class="eyebrow">Preparado para esta noche</p>
+    <h2>Tu ritual de esta noche.</h2>
+    <p class="lede" id="ritualLede"></p>
+    <ol class="plan" id="plan"></ol>
+  </div>
+  <div class="foot"><span></span><button class="primary" data-go="respira">Empezar <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6.5 18.5 12 13 17.5"/></svg></button></div>
+</section>
+
+<!-- ========== RESPIRACIÓN ========== -->
+<section class="screen" id="respira" aria-label="Respiración">
+  <div class="topbar"><div class="step"><button class="iconbtn" data-back aria-label="Volver"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H6M11 6.5 5.5 12 11 17.5"/></svg></button><span class="ticks"></span></div><span>Respirar</span></div>
+  <div class="orbwrap">
+    <div class="orb" id="orb"><div class="halo"></div><div class="body"></div><div class="core"></div><div class="rim"></div></div>
+  </div>
+  <div class="breathtext" aria-live="polite"><span id="bt1">Inhala</span><span id="bt2">Sostén</span><span id="bt3">Exhala</span><span id="bt0" class="on">Acomódate</span></div>
+  <div class="breathmeta" id="breathMeta">Inhala 4 · sostén 2 · exhala 6</div>
+  <div class="foot"><span></span><button class="quiet fadein-late" id="breathNext" data-go="lectura">Seguir</button></div>
+</section>
+
+<!-- ========== LECTURA ========== -->
+<section class="screen" id="lectura" aria-label="Lectura">
+  <div class="topbar"><div class="step"><button class="iconbtn" data-back aria-label="Volver"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H6M11 6.5 5.5 12 11 17.5"/></svg></button><span class="ticks"></span></div>
+    <div class="readtools"><button id="fsMinus" aria-label="Texto más pequeño" style="font-size:15px">A</button><button id="fsPlus" aria-label="Texto más grande" style="font-size:21px">A</button></div></div>
+  <div class="reader" id="reader"><article id="reading"></article></div>
+  <div class="foot"><button class="textlink" id="otherRead">Otra lectura</button><button class="primary" data-go="sonidos">Seguir</button></div>
+</section>
+
+<!-- ========== SONIDOS ========== -->
+<section class="screen" id="sonidos" aria-label="Paisajes sonoros">
+  <div class="topbar"><div class="step"><button class="iconbtn" data-back aria-label="Volver"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H6M11 6.5 5.5 12 11 17.5"/></svg></button><span class="ticks"></span></div><span id="sonidosLbl">Ambiente</span></div>
+  <div class="scenehead">
+    <p class="eyebrow">Paisaje sonoro</p>
+    <h2 id="sceneName">Lluvia suave</h2>
+    <p class="desc" id="sceneDesc"></p>
+    <div class="player">
+      <button class="playbtn" id="playBtn" aria-label="Reproducir"></button>
+      <label class="vol"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6"/></svg><input type="range" id="vol" min="0" max="100" value="60" aria-label="Volumen"></label>
+      <div class="timer" id="timer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="12" cy="13" r="7.5"/><path d="M12 9.5V13l2.2 1.6M9.5 3h5"/></svg>
+        <button data-t="15">15</button><button data-t="30" aria-pressed="true">30</button><button data-t="60">60</button><button data-t="0" aria-label="Sin temporizador">∞</button></div>
+    </div>
+  </div>
+  <div class="strip" id="strip" role="list"></div>
+  <div class="foot"><span></span><button class="primary" id="sonNext" data-go="cierre">Seguir</button></div>
+</section>
+
+<!-- ========== CIERRE ========== -->
+<section class="screen" id="cierre" aria-label="Cierre">
+  <div class="topbar"><div class="step"><button class="iconbtn" data-back aria-label="Volver"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H6M11 6.5 5.5 12 11 17.5"/></svg></button><span class="ticks"></span></div><span>Cerrar</span></div>
+  <div class="content col">
+    <h2>El día terminó.</h2>
+    <p class="lede" id="closeLede">Lo que escribiste queda guardado para mañana. Tu cuerpo ya sabe qué hacer ahora.</p>
+    <ul class="summary" id="summary"></ul>
+    <div class="after">
+      <p class="qlabel">¿Cómo te vas a la cama?</p>
+      <div class="choices" id="afterChoices" role="group" aria-label="Cómo te sientes ahora"></div>
+    </div>
+    <div class="actions">
+      <button class="primary" data-go="descanso">Entrar en modo descanso
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z"/></svg></button>
+      <button class="textlink" data-go="progreso">Ver mi progreso</button>
+    </div>
+  </div>
+</section>
+
+<!-- ========== REGISTRO DE LA NOCHE ========== -->
+<section class="screen" id="registro" aria-label="Registro de la noche">
+  <div class="topbar"><div class="step"><button class="iconbtn" data-back aria-label="Volver"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H6M11 6.5 5.5 12 11 17.5"/></svg></button></div><span>Registro</span></div>
+  <div class="content col">
+    <p class="eyebrow" id="regDate"></p>
+    <h2>¿Cómo dormiste?</h2>
+    <ul class="feelings" id="sleepQ"></ul>
+    <div class="regblock">
+      <p class="qlabel">¿Te despertaste durante la noche?</p>
+      <div class="choices" id="wakesQ" role="group" aria-label="Despertares"></div>
+    </div>
+    <div class="regblock">
+      <label class="qlabel" for="regNote">Algo que quieras recordar <span class="opt">· opcional</span></label>
+      <input class="linefield" id="regNote" type="text" maxlength="140" placeholder="Un sueño, una hora, una sensación…" enterkeyhint="done">
+    </div>
+  </div>
+  <div class="foot"><button class="textlink" data-back>Ahora no</button><button class="primary" id="regSave" disabled>Guardar</button></div>
+</section>
+
+<!-- ========== PROGRESO ========== -->
+<section class="screen scrollable" id="progreso" aria-label="Tu progreso">
+  <div class="topbar"><div class="step"><button class="iconbtn" data-back aria-label="Volver"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H6M11 6.5 5.5 12 11 17.5"/></svg></button></div><span>Progreso</span></div>
+  <div class="scrollarea">
+    <div class="col">
+      <h2>Tus noches.</h2>
+      <p class="lede" id="progLede"></p>
+      <div class="stats" id="stats"></div>
+      <div class="block">
+        <p class="qlabel">Últimas dos semanas</p>
+        <div class="nights" id="nightsRow" role="img"></div>
+        <div class="legend"><span><i class="k-done"></i>Ritual completo</span><span><i class="k-part"></i>Empezado</span><span><i class="k-sleep"></i>Calidad del sueño</span></div>
+      </div>
+      <div class="block" id="thoughtsBlock">
+        <p class="qlabel">Lo que dejaste para después</p>
+        <ul class="thoughts" id="thoughtsList"></ul>
+      </div>
+      <div class="block data">
+        <p class="small" id="storageNote"></p>
+        <div class="datalinks">
+          <button class="textlink" id="exportBtn">Descargar mis datos</button>
+          <button class="textlink danger" id="wipeBtn">Borrar todo</button>
+        </div>
+        <div class="confirm" id="wipeConfirm" hidden>
+          <p class="small">Se borrarán tu nombre, tus noches y tus pensamientos de este dispositivo. No se puede deshacer.</p>
+          <div class="datalinks"><button class="quiet" id="wipeYes">Sí, borrar</button><button class="textlink" id="wipeNo">Cancelar</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== DESCANSO ========== -->
+<section class="screen" id="descanso" aria-label="Modo descanso">
+  <div class="resttop"><span id="restScene"></span><button class="iconbtn" id="restExit" aria-label="Salir del modo descanso"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg></button></div>
+  <div class="restclock" id="restClock">—</div>
+  <div class="restctl">
+    <button class="iconbtn" id="restPlay" aria-label="Pausar sonido"></button>
+    <span class="restnote" id="restNote"></span>
+    <button class="iconbtn" id="restDim" aria-label="Ocultar controles"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z"/></svg></button>
+  </div>
+  <p class="resthint">Toca para ver los controles</p>
+</section>
+<noscript><p style="position:fixed;inset:auto 0 40px;text-align:center;color:#efe7da;font-family:Georgia,serif">Esta experiencia necesita JavaScript activado.</p></noscript>
+<script src="js/config.js"></script>
+<script src="assets/img/manifest.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/data.js"></script>
+<script src="js/images.js"></script>
+<script src="js/fx.js"></script>
+<script src="js/sound.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

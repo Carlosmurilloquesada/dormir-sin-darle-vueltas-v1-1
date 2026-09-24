@@ -1,0 +1,17 @@
+{
+  "name": "dormir-sin-darle-vueltas",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Ritual nocturno para dejar de darle vueltas a todo y dormir.",
+  "type": "module",
+  "scripts": {
+    "images": "node scripts/fetch-images.mjs",
+    "serve": "npx --yes serve -l 4173 ."
+  },
+  "devDependencies": {
+    "sharp": "^0.35.4"
+  },
+  "engines": {
+    "node": ">=18.17"
+  }
+}
