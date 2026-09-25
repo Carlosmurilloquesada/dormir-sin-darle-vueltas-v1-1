@@ -364,3 +364,72 @@ h1[tabindex="-1"]:focus,h2[tabindex="-1"]:focus{outline:none}
   .bg img{object-position:var(--pos-m,var(--pos,50% 50%))}
   .bg .lqip{background-position:var(--pos-m,var(--pos,50% 50%))}
 }
+
+/* =========================================================
+   v1.1.1 — Scroll nativo, CTA siempre visibles, áreas táctiles
+   Causa corregida: las pantallas eran capas fijas de altura exacta
+   sin overflow, dentro de un body con overflow:hidden → el contenido
+   que no cabía quedaba recortado y no había nada que desplazar.
+   Además, la pantalla saliente seguía recibiendo toques ~1 s.
+   ========================================================= */
+
+/* El fondo fotográfico (#stage) queda fijo; cada pantalla es su propio
+   contenedor de scroll nativo (rueda, trackpad, dedo y teclado). */
+.screen{
+  position:fixed;inset:0;height:100vh;height:100dvh;
+  overflow-x:hidden;overflow-y:auto;
+  -webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;
+  scroll-padding-bottom:120px;
+}
+.screen:not(.active){pointer-events:none}
+#descanso{overflow:hidden}
+
+/* Las áreas de lectura y progreso usan el scroll de su pantalla (un solo scroll, sin anidar). */
+.reader,.scrollarea{flex:1 0 auto;overflow:visible;-webkit-mask-image:none;mask-image:none}
+.reader{padding-bottom:6vh}
+.scrollarea{padding-bottom:calc(var(--safe-b) + 8vh)}
+
+/* Barra de acción fija al pie: el CTA siempre está a la vista. */
+.screen:has(> .foot){padding-bottom:0}
+.foot{
+  position:sticky;bottom:0;z-index:3;margin-top:auto;
+  padding-top:34px;padding-bottom:calc(var(--safe-b) + 20px);
+  /* degradado a todo el ancho sin generar desborde horizontal (border-image outset = solo pintura) */
+  border-image:linear-gradient(180deg, rgba(5,5,7,0) 0%, rgba(5,5,7,.72) 42%, rgba(5,5,7,.9) 100%) fill 0 / / 0 100vw;
+}
+#lectura .foot,#sonidos .foot{padding-top:34px;padding-bottom:calc(var(--safe-b) + 20px)}
+#respira .foot{margin-top:18px}
+
+/* Inicio y cierre: el bloque de acciones también se queda visible al pie si no cabe. */
+#home .content,#cierre .content{padding-bottom:0}
+#home .actions,#cierre .actions{position:sticky;bottom:0;z-index:3;padding-top:22px;padding-bottom:calc(var(--safe-b) + 18px);
+  border-image:linear-gradient(180deg, rgba(5,5,7,0) 0%, rgba(5,5,7,.55) 45%, rgba(5,5,7,.78) 100%) fill 0 / / 0 100vw}
+#home,#cierre{padding-bottom:0}
+
+/* Con el teclado abierto en móvil, las barras dejan de ser fijas para no tapar el campo. */
+.typing .foot,.typing #home .actions,.typing #cierre .actions{position:relative}
+
+/* Estados del CTA: incompleto = contorno + texto de ayuda; completo = relleno cálido con flecha. */
+.primary .arr{transition:transform .9s var(--ease)}
+.primary:not([disabled]):hover .arr{transform:translateX(3px)}
+.primary[disabled]{
+  opacity:1;filter:none;cursor:not-allowed;
+  color:var(--ink-3);background:rgba(239,231,218,.03);
+  box-shadow:0 0 0 1px rgba(239,231,218,.18) inset;
+}
+.primary[disabled] .arr{opacity:.35}
+.hint{font-size:13px;line-height:1.4;color:var(--ink-3);max-width:22ch;transition:opacity .8s}
+.hint:empty{opacity:0}
+
+/* Áreas táctiles ≥ 44 px sin cambiar el aspecto */
+.iconbtn,.readtools button{width:44px;height:44px}
+.textlink{display:inline-flex;align-items:center;min-height:44px}
+.timer button{min-height:44px;min-width:40px}
+.thoughts .meta button{min-height:44px}
+.notice{min-height:44px}
+.vol{min-height:44px}
+.linefield{min-height:44px}
+input[type=range]{height:44px;touch-action:pan-y;cursor:pointer}
+.noise .dots,.choices,.feelings{touch-action:manipulation}
+.strip{touch-action:pan-x pan-y;overscroll-behavior-x:contain}
+#respira .orbwrap{overflow-x:clip}

@@ -119,7 +119,9 @@
     if (id === current || !document.getElementById(id)) return;
     const prev = current;
     if (push && prev) { S.history.push(prev); try { history.pushState({ dsv: id }, ''); } catch (e) {} }
-    $$('.screen').forEach(s => s.classList.toggle('active', s.id === id));
+    const next = document.getElementById(id);
+    if (next.scrollTop) next.scrollTop = 0;   // cada pantalla empieza arriba
+    $$('.screen').forEach(s => { const on = s.id === id; s.classList.toggle('active', on); s.inert = !on; });
     current = id;
     atmosphere(id);
     renderTicks();
@@ -236,24 +238,29 @@
     $('#noiseLbl').textContent = n ? NOISE_LBL[n] : '—';
     const r = $('#checkResp');
     if (f) { r.textContent = FEEL[f].resp; r.classList.add('show'); } else { r.textContent = ''; r.classList.remove('show'); }
-    $('#checkNext').disabled = !f;
+    updateCheckCta();
   }
   $('#feelings').addEventListener('click', e => {
     const b = e.target.closest('button'); if (!b) return;
     $$('#feelings button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
     const feel = b.dataset.f;
-    patchNight({ feel });
+    patchNight({ feel }).then(updateCheckCta); updateCheckCta();
     const r = $('#checkResp'); r.classList.remove('show');
     setTimeout(() => { r.textContent = FEEL[feel].resp; r.classList.add('show'); }, 350);
-    $('#checkNext').disabled = false;
+    updateCheckCta();
   });
   $('#noiseDots').addEventListener('click', e => {
     const b = e.target.closest('button'); if (!b) return;
     const noise = +b.dataset.n;
     $$('#noiseDots button').forEach(x => x.setAttribute('aria-pressed', String(+x.dataset.n === noise)));
     $('#noiseLbl').textContent = NOISE_LBL[noise];
-    patchNight({ noise });
+    patchNight({ noise }).then(updateCheckCta); updateCheckCta();
   });
+  function updateCheckCta() {
+    const f = S.night && S.night.feel, n = S.night && S.night.noise;
+    $('#checkNext').disabled = !(f && n);
+    $('#checkHint').textContent = f && n ? '' : !f && !n ? 'Elige cómo llegas y tu ruido mental' : !f ? 'Falta elegir cómo llegas' : 'Falta tu nivel de ruido mental';
+  }
   ENTER.checkin = restoreCheckin;
 
   /* =========================================================
@@ -486,7 +493,7 @@
     if (!S.solo && S.night && S.night.plan && !S.prefs.sceneChosen) S.prefs.scene = S.night.plan.scene;
     atmosphere('sonidos');
     renderScene(false); renderTimer();
-    $('#sonNext').textContent = S.solo ? 'Modo descanso' : 'Seguir';
+    $('#sonNextTxt').textContent = S.solo ? 'Modo descanso' : 'Seguir';
     $('#sonNext').dataset.go = S.solo ? 'descanso' : 'cierre';
     $('#sonidosLbl').textContent = S.solo ? 'Ambiente' : 'Escuchar';
     const gestured = !navigator.userActivation || navigator.userActivation.hasBeenActive;
@@ -660,6 +667,11 @@
     go('home', { push: false });
   };
   ENTER.progreso = () => { $('#wipeConfirm').hidden = true; $('#wipeBtn').hidden = false; $('#progreso .scrollarea').scrollTop = 0; renderProgress(); };
+
+  /* Teclado en pantalla: mientras se escribe, los CTA fijos no tapan el campo. */
+  const coarse = matchMedia('(pointer: coarse)');
+  document.addEventListener('focusin', e => { if (coarse.matches && e.target.matches('textarea, input[type=text]')) document.documentElement.classList.add('typing'); });
+  document.addEventListener('focusout', e => { if (e.target.matches('textarea, input[type=text]')) document.documentElement.classList.remove('typing'); });
 
   /* =========================================================
      Inicio

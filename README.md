@@ -1,4 +1,4 @@
-# Dormir Sin Darle Vueltas a Todo — v1.1
+# Dormir Sin Darle Vueltas a Todo — v1.1.1
 
 Microaplicación web estática (HTML + CSS + JavaScript, sin framework ni paso de compilación).
 Funciona abriendo `index.html` o desde cualquier hosting estático (Netlify, Vercel, Cloudflare Pages, GitHub Pages…).

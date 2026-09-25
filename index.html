@@ -81,7 +81,7 @@
     </div>
     <p class="response" id="checkResp"></p>
   </div>
-  <div class="foot"><span></span><button class="primary" id="checkNext" data-go="descarga" disabled>Seguir</button></div>
+  <div class="foot"><span class="hint" id="checkHint" aria-live="polite">Elige cómo llegas y tu ruido mental</span><button class="primary" id="checkNext" data-go="descarga" disabled aria-describedby="checkHint">Seguir <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6.5 18.5 12 13 17.5"/></svg></button></div>
 </section>
 
 <!-- ========== DESCARGA ========== -->
@@ -101,7 +101,7 @@
     </div>
     <p class="privacy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="5" y="10.5" width="14" height="9.5" rx="2"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></svg>Se guarda solo en este dispositivo. Nadie más puede leerlo.</p>
   </div>
-  <div class="foot"><button class="textlink" id="dlSkip" data-go="ritual">Omitir</button><button class="primary" id="dlNext" data-go="ritual">Seguir</button></div>
+  <div class="foot"><button class="textlink" id="dlSkip" data-go="ritual">Omitir</button><button class="primary" id="dlNext" data-go="ritual">Seguir <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6.5 18.5 12 13 17.5"/></svg></button></div>
 </section>
 
 <!-- ========== RITUAL PERSONALIZADO ========== -->
@@ -124,7 +124,7 @@
   </div>
   <div class="breathtext" aria-live="polite"><span id="bt1">Inhala</span><span id="bt2">Sostén</span><span id="bt3">Exhala</span><span id="bt0" class="on">Acomódate</span></div>
   <div class="breathmeta" id="breathMeta">Inhala 4 · sostén 2 · exhala 6</div>
-  <div class="foot"><span></span><button class="quiet fadein-late" id="breathNext" data-go="lectura">Seguir</button></div>
+  <div class="foot"><span></span><button class="quiet fadein-late" id="breathNext" data-go="lectura">Seguir <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6.5 18.5 12 13 17.5"/></svg></button></div>
 </section>
 
 <!-- ========== LECTURA ========== -->
@@ -132,7 +132,7 @@
   <div class="topbar"><div class="step"><button class="iconbtn" data-back aria-label="Volver"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H6M11 6.5 5.5 12 11 17.5"/></svg></button><span class="ticks"></span></div>
     <div class="readtools"><button id="fsMinus" aria-label="Texto más pequeño" style="font-size:15px">A</button><button id="fsPlus" aria-label="Texto más grande" style="font-size:21px">A</button></div></div>
   <div class="reader" id="reader"><article id="reading"></article></div>
-  <div class="foot"><button class="textlink" id="otherRead">Otra lectura</button><button class="primary" data-go="sonidos">Seguir</button></div>
+  <div class="foot"><button class="textlink" id="otherRead">Otra lectura</button><button class="primary" data-go="sonidos">Seguir <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6.5 18.5 12 13 17.5"/></svg></button></div>
 </section>
 
 <!-- ========== SONIDOS ========== -->
@@ -150,7 +150,7 @@
     </div>
   </div>
   <div class="strip" id="strip" role="list"></div>
-  <div class="foot"><span></span><button class="primary" id="sonNext" data-go="cierre">Seguir</button></div>
+  <div class="foot"><span></span><button class="primary" id="sonNext" data-go="cierre"><span id="sonNextTxt">Seguir</span> <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6.5 18.5 12 13 17.5"/></svg></button></div>
 </section>
 
 <!-- ========== CIERRE ========== -->
